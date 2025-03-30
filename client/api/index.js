@@ -1,7 +1,6 @@
-const BASE_API = "http://localhost:3000/api"; 
+const BASE_API = "http://localhost:3000/api";
 
 
-// Get all users
 export async function getUsers() {
   try {
     const response = await fetch(`${BASE_API}/users`);
@@ -13,7 +12,6 @@ export async function getUsers() {
   }
 }
 
-// Register a new user
 export async function registerUser(username, password) {
   try {
     const response = await fetch(`${BASE_API}/users/register`, {
@@ -34,7 +32,7 @@ export async function registerUser(username, password) {
   }
 }
 
-// Login a user
+
 export async function loginUser(credentials) {
   try {
     const response = await fetch(`${BASE_API}/users/login`, {
@@ -53,7 +51,6 @@ export async function loginUser(credentials) {
   }
 }
 
-// Delete a user (Admin functionality)
 export async function deleteUser(userId) {
   try {
     const response = await fetch(`${BASE_API}/users/${userId}`, {
@@ -68,56 +65,56 @@ export async function deleteUser(userId) {
   }
 }
 
-// ================== ROOFTOP BARS ================== //
 
-// Get all rooftop bars
-export async function getBars() {
+
+
+export async function getTeas() {
   try {
-    const response = await fetch(`${BASE_API}/bars`);
+    const response = await fetch(`${BASE_API}/teas`);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-    const bars = await response.json();
-    console.log("Fetched bars:", bars);
-    return bars;
+    const teas = await response.json();
+    console.log("Fetched teas:", teas);
+    return teas;
   } catch (err) {
-    console.error("Error fetching bars:", err);
+    console.error("Error fetching teas:", err);
     return [];
   }
 }
 
-// Get a single rooftop bar by ID
-export async function getBarById(barId) {
+
+export async function getTeaById(teaId) {
   try {
-    const response = await fetch(`${BASE_API}/bars/${barId}`);
+    const response = await fetch(`${BASE_API}/teas/${teaId}`);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
     return await response.json();
   } catch (err) {
-    console.error(`Error fetching bar ${barId}:`, err);
+    console.error(`Error fetching tea ${teaId}:`, err);
   }
 }
 
-// Add a new rooftop bar (Admin functionality)
-export async function addBar(bar) {
+
+export async function addTea(tea) {
   try {
-    const response = await fetch(`${BASE_API}/bars`, {
+    const response = await fetch(`${BASE_API}/teas`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(bar),
+      body: JSON.stringify(tea),
     });
 
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
     return await response.json();
   } catch (err) {
-    console.error("Error adding bar:", err);
+    console.error("Error adding tea:", err);
   }
 }
 
-// Delete a rooftop bar (Admin functionality)
-export async function deleteBar(barId) {
+
+export async function deleteTea(teaId) {
   try {
-    const response = await fetch(`${BASE_API}/bars/${barId}`, {
+    const response = await fetch(`${BASE_API}/teas/${teaId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
@@ -125,27 +122,25 @@ export async function deleteBar(barId) {
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     return await response.json();
   } catch (err) {
-    console.error("Error deleting bar:", err);
+    console.error("Error deleting tea:", err);
   }
 }
 
-// ================== REVIEWS ================== //
 
-// Get reviews for a specific bar
-export async function getReviews(barId) {
+export async function getReviews(teaId) {
   try {
-    const response = await fetch(`${BASE_API}/reviews/${barId}`);
+    const response = await fetch(`${BASE_API}/reviews/${teaId}`);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
     return await response.json();
   } catch (err) {
-    console.error(`Error fetching reviews for bar ${barId}:`, err);
+    console.error(`Error fetching reviews for tea ${teaId}:`, err);
     return [];
   }
 }
 
-// Add a review for a rooftop bar
-export async function addReview(token, barId, rating, comment) {
+
+export async function addReview(token, teaId, rating, comment) {
   try {
     const response = await fetch(`${BASE_API}/reviews`, {
       method: "POST",
@@ -153,7 +148,7 @@ export async function addReview(token, barId, rating, comment) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ bar_id: barId, rating, comment }),
+      body: JSON.stringify({ tea_id: teaId, rating, comment }),
     });
 
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
@@ -164,7 +159,6 @@ export async function addReview(token, barId, rating, comment) {
   }
 }
 
-// Delete a review (Admin functionality)
 export async function deleteReview(reviewId) {
   try {
     const response = await fetch(`${BASE_API}/reviews/${reviewId}`, {

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { registerUser } from "../api"; // Ensure you have this API function
-import { useNavigate } from "react-router-dom";
+import { loginUser } from "../api";
+import { useNavigate, Link } from "react-router-dom";
 
-export default function Register({ setToken }) {
+export default function Login({ setToken }) {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState(null);
   const [nameError, setNameError] = useState("");
@@ -12,48 +12,46 @@ export default function Register({ setToken }) {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    // Form validation
-    if (formData.username.length < 3) {
-      setNameError("Your username must be at least 3 characters!");
+    if (formData.username.length < 1) {
+      setNameError("Please enter your username to sip in.");
       return;
     }
-    if (formData.password.length < 6) {
-      setPasswordError("Your password must be at least 6 characters long.");
+
+    if (formData.password.length < 1) {
+      setPasswordError("Don't forget your password — it's the key to your kettle.");
       return;
     }
 
     try {
-      // Call API to register user
-      const result = await registerUser(formData.username, formData.password);
+      const result = await loginUser(formData);
 
-      if (result.error) {
-        setError(result.error); // Display API error message
-        return;
+      if (result.token) {
+        setToken(result.token);
+        localStorage.setItem("token", result.token);
+        setError(null);
+        navigate("/"); // Redirect to home or your tea catalog
+      } else {
+        setError("Hmm... that username or password doesn’t match our teapot.");
       }
-
-      console.log("Registration Successful:", result);
-      setToken(result.token);
-      navigate("/");
-
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      setError("Trouble brewing. Try again with the correct login details.");
     }
   }
 
   return (
     <div className="info-container">
-      <h2>Register</h2>
+      <h2>Welcome Back, Tea Friend 🍵</h2>
       {error && <p className="error">{error}</p>}
 
       <form onSubmit={handleSubmit} className="form">
-        <label className="username">
+        <label>
           Username:
           <input
             type="text"
             value={formData.username}
             onChange={(e) => {
               setNameError("");
-              setFormData({ ...formData, username: e.target.value });
+              setFormData((prev) => ({ ...prev, username: e.target.value }));
             }}
           />
           {nameError && <p className="error">{nameError}</p>}
@@ -61,14 +59,14 @@ export default function Register({ setToken }) {
 
         <br />
 
-        <label className="password">
+        <label>
           Password:
           <input
             type="password"
             value={formData.password}
             onChange={(e) => {
               setPasswordError("");
-              setFormData({ ...formData, password: e.target.value });
+              setFormData((prev) => ({ ...prev, password: e.target.value }));
             }}
           />
           {passwordError && <p className="error">{passwordError}</p>}
@@ -76,10 +74,14 @@ export default function Register({ setToken }) {
 
         <br />
 
-        <button className="submit-button" type="submit">
-          Register
+        <button type="submit" className="submit-button">
+          Log In
         </button>
       </form>
+
+      <Link to="/register">
+        <p>New here? Create an account →</p>
+      </Link>
     </div>
   );
 }
